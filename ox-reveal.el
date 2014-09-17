@@ -57,6 +57,7 @@
     (:reveal-trans "REVEAL_TRANS" nil org-reveal-transition t)
     (:reveal-speed "REVEAL_SPEED" nil org-reveal-transition-speed t)
     (:reveal-theme "REVEAL_THEME" nil org-reveal-theme t)
+    (:reveal-toc-title "REVEAL_TOC_TITLE" nil org-reveal-toc-title t)
     (:reveal-extra-css "REVEAL_EXTRA_CSS" nil nil nil)
     (:reveal-extra-js "REVEAL_EXTRA_JS" nil org-reveal-extra-js nil)
     (:reveal-hlevel "REVEAL_HLEVEL" nil nil t)
@@ -66,8 +67,7 @@
     (:reveal-preamble "REVEAL_PREAMBLE" nil org-reveal-preamble t)
     (:reveal-head-preamble "REVEAL_HEAD_PREAMBLE" nil org-reveal-head-preamble t)
     (:reveal-postamble "REVEAL_POSTAMBLE" nil org-reveal-postamble t)
-    (:reveal-plugins "REVEAL_PLUGINS" nil nil t)
-    )
+    (:reveal-plugins "REVEAL_PLUGINS" nil nil t))
 
   :translate-alist
   '((export-block . org-reveal-export-block)
@@ -128,6 +128,12 @@ can be include."
 (defcustom org-reveal-theme
   "default"
   "Reveal theme."
+  :group 'org-export-reveal
+  :type 'string)
+
+(defcustom org-reveal-toc-title
+  "Table ff Contents"
+  "Title for the \"Table of Contents\" slide"
   :group 'org-export-reveal
   :type 'string)
 
@@ -525,10 +531,11 @@ dependencies: [
   "Generate the Reveal.js contents for headlines in table of contents.
 Add proper internal link to each headline."
   (let ((level (org-export-get-relative-level (car headlines) info))
-        (hlevel (org-reveal--get-hlevel info)))
+        (hlevel (org-reveal--get-hlevel info))
+        (toctitle (plist-get info :reveal-toc-title)))
     (concat
      (format "<h2>%s</h2>"
-             (org-export-translate "Table of Contents" :html info))
+             (org-export-translate toctitle :html info))
      (org-reveal-toc-headlines-r headlines info 0 hlevel 1 1)
      (if headlines "</li>\n</ul>\n" ""))))
 
